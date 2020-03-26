@@ -96,18 +96,32 @@ view model =
 board : Model -> Html Msg
 board model =
     div []
-        [ row model.firstPlayer
-        , row model.secondPlayer
+        [ playerColumn model.firstPlayer "left"
+        , playerColumn model.secondPlayer "right"
         ]
 
 
-row : Player -> Html Msg
-row player =
-    div []
+playerColumn : Player -> String -> Html Msg
+playerColumn player leftOrRight =
+    div
+        [ style "position" "fixed"
+        , style "width" "50%"
+        , style leftOrRight "0"
+        ]
         [ h1 [] [ text (String.concat [ player.name, " (", String.fromInt player.finalScore, ")" ]) ]
         , scores player
         , scoreInput player
         ]
+
+
+scores : Player -> Html Msg
+scores player =
+    div [] (List.map score player.scores)
+
+
+score : Int -> Html Msg
+score s =
+    p [] [ text (String.fromInt s) ]
 
 
 scoreInput : Player -> Html Msg
@@ -124,13 +138,3 @@ scoreInput player =
             ]
             [ text "add" ]
         ]
-
-
-scores : Player -> Html Msg
-scores player =
-    div [] (List.map score player.scores)
-
-
-score : Int -> Html Msg
-score s =
-    p [] [ text (String.fromInt s) ]
